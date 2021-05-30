@@ -1,6 +1,7 @@
 package br.edu.infnet.sgi.models;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -8,9 +9,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import org.springframework.data.relational.core.mapping.Table;
+
 @Entity
+@Table("Eventos")
 public class Evento {
 
 	@Id
@@ -24,7 +30,9 @@ public class Evento {
 	@Column(name = "tipo_evento")
 	private String tipoEvento;
 	
-	@Column(name = "organizador")
+	@ManyToOne(optional = false)
+    @JoinColumn(name = "usuario_id", nullable = false,
+        referencedColumnName = "id")	
 	private Usuario organizador;
 	
 	@Column(name = "Lotacao")
@@ -43,7 +51,7 @@ public class Evento {
 	private String descricao;
 	
 	@OneToMany(mappedBy = "evento", cascade = CascadeType.ALL)	
-	private Compra compra;
+	private Set<Compra> compra;
 	
 	public long getId() {
 		return id;

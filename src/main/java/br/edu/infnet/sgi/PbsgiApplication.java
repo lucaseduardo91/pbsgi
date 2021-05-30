@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
 @EnableAutoConfiguration
-@ComponentScan(basePackages = { "br.edu.infnet.sgi" })
+@ComponentScan
 @EnableJpaRepositories(basePackages = "br.edu.infnet.sgi.repositories")
 @EnableTransactionManagement
 @EntityScan(basePackages = "br.edu.infnet.sgi.models")

@@ -1,14 +1,20 @@
 package br.edu.infnet.sgi.models;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import org.springframework.data.relational.core.mapping.Table;
+
+@Entity
+@Table("Usuarios")
 public class Usuario {
 
 	@Id
@@ -34,8 +40,11 @@ public class Usuario {
 	@Column(name = "saldo_carteira")
 	private BigDecimal saldoCarteira;
 	
-	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)	
-	private Compra compra;
+	@OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)	
+	private Set<Compra> compra;
+	
+	@OneToMany(mappedBy = "organizador", cascade = CascadeType.ALL)	
+	private Set<Evento> evento;
 	
 	private Boolean validarCpfCnpj(String valor)
 	{
