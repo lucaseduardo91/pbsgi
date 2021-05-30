@@ -1,14 +1,49 @@
 package br.edu.infnet.sgi.models;
 
+import java.math.BigDecimal;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
+@Entity
 public class Evento {
 
+	@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
 	private long id;
+	
+	@Column(name = "nome")
 	private String nome;
+	
+	@Column(name = "tipo_evento")
 	private String tipoEvento;
-	private Organizador organizador;
+	
+	@Column(name = "organizador")
+	private Usuario organizador;
+	
+	@Column(name = "Lotacao")
 	private int lotacao;
-	private Endereco endereco;
+	
+	@Column(name = "ingressos_vendidos")
+	private int ingressosVendidos;
+	
+	@Column(name = "preco")
+	private BigDecimal preco;
+	
+	@Column(name = "endereco")
+	private String endereco;
+	
+	@Column(name = "descricao")
 	private String descricao;
+	
+	@OneToMany(mappedBy = "evento", cascade = CascadeType.ALL)	
+	private Compra compra;
 	
 	public long getId() {
 		return id;
@@ -34,11 +69,11 @@ public class Evento {
 		this.tipoEvento = tipoEvento;
 	}
 
-	public Organizador getOrganizador() {
+	public Usuario getOrganizador() {
 		return organizador;
 	}
 
-	public void setOrganizador(Organizador organizador) {
+	public void setOrganizador(Usuario organizador) {
 		this.organizador = organizador;
 	}
 
@@ -49,12 +84,28 @@ public class Evento {
 	public void setLotacao(int lotacao) {
 		this.lotacao = lotacao;
 	}
+	
+	public int getIngressosVendidos() {
+		return ingressosVendidos;
+	}
 
-	public Endereco getEndereco() {
+	public void setIngressosVendidos(int ingressosVendidos) {
+		this.ingressosVendidos = ingressosVendidos;
+	}
+	
+	public BigDecimal getPreco() {
+		return preco;
+	}
+
+	public void setPreco(BigDecimal preco) {
+		this.preco = preco;
+	}
+
+	public String getEndereco() {
 		return endereco;
 	}
 
-	public void setEndereco(Endereco endereco) {
+	public void setEndereco(String endereco) {
 		this.endereco = endereco;
 	}
 

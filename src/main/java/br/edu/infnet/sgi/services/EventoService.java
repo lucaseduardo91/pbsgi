@@ -1,53 +1,110 @@
 package br.edu.infnet.sgi.services;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.edu.infnet.sgi.models.Endereco;
+import br.edu.infnet.sgi.dtos.EventoDto;
+import br.edu.infnet.sgi.dtos.UsuarioDto;
 import br.edu.infnet.sgi.models.Evento;
-import br.edu.infnet.sgi.models.Organizador;
+import br.edu.infnet.sgi.repositories.EventoRepository;
 
 @Service
 public class EventoService {
 
-	public Evento criarEvento(Evento novoEvento)
-	{		
-		validarDadosEvento(novoEvento);
-		// Chamar método do repositório para salvar evento
-		return novoEvento;
-	}
+	@Autowired
+	EventoRepository eventoRepository;
 	
-	public Evento buscarEvento(long id)
+	@Autowired
+	EntityConverterService conversor;
+	
+	public EventoDto criarEvento(EventoDto novoEvento)
 	{
-		// Chamar método do repositório para buscar evento
+		if(validarDadosEvento(novoEvento))
+		{
+			Evento evento = conversor.converterDtoParaEvento(novoEvento);
+			eventoRepository.save(evento);
+			return novoEvento;
+		}				
 		
-		return new Evento();
+		return null;
 	}
 	
-	public Evento consultarHistorico(long id)
+	public EventoDto buscarEvento(long id)
+	{
+		Evento evento = eventoRepository.findById(id).get();
+		
+		return conversor.converterEventoParaDto(evento);
+	}
+	
+	public List<EventoDto> buscarEventoPorNome(String nomeEvento)
+	{
+		List<Evento> eventos = eventoRepository.findByNome(nomeEvento);
+		List<EventoDto> eventosDto = new ArrayList<EventoDto>();
+		
+		for(Evento evento : eventos)
+		{
+			eventosDto.add(conversor.converterEventoParaDto(evento));
+		}
+		
+		return eventosDto;
+	}
+	
+	public List<EventoDto> buscarEventosPorTipo(String tipoEvento)
+	{
+		List<Evento> eventos = eventoRepository.findByTipoEvento(tipoEvento);
+		List<EventoDto> eventosDto = new ArrayList<EventoDto>();
+		
+		for(Evento evento : eventos)
+		{
+			eventosDto.add(conversor.converterEventoParaDto(evento));
+		}
+		
+		return eventosDto;
+	}
+	
+	public List<EventoDto> consultarHistorico(long id)
 	{
 		// Chamar método do repositório para buscar eventos passados com participação do usuário
 		
-		return new Evento();
+		return new ArrayList<EventoDto>();
 	}
 	
-	public Evento atualizarEvento(Evento eventoAtualizado)
+	public EventoDto atualizarEvento(EventoDto eventoAtualizado, long id)
 	{		
-		// Chamar método do repositório para salvar alterações no evento
+		Evento evento = eventoRepository.findById(id).get();
+		
+		evento.setId(id);
+		evento.setNome(eventoAtualizado.nome);
+		evento.setDescricao(eventoAtualizado.descricao);
+		evento.setEndereco(eventoAtualizado.endereco);
+		evento.setTipoEvento(eventoAtualizado.tipoEvento);
+		evento.setIngressosVendidos(eventoAtualizado.ingressosVendidos);
+		evento.setLotacao(eventoAtualizado.lotacao);
+		evento.setPreco(eventoAtualizado.preco);
+		evento.setOrganizador(conversor.converterDtoParaUsuario(eventoAtualizado.organizador));
+		
+		eventoRepository.save(evento);
+		
 		return eventoAtualizado;
 	}
 	
 	public void deletarEvento(long id)
 	{
-		// Chamar método do repositório para deletar evento
+		eventoRepository.deleteById(id);
 	}
 	
-	private boolean validarDadosEvento(Evento evento) {
-		String nome = evento.getNome();
-		String tipoEvento = evento.getTipoEvento();
-		String descricao = evento.getDescricao();
-		int lotacao = evento.getLotacao();
-		Endereco endereco = evento.getEndereco();
-		Organizador organizador = evento.getOrganizador();
+	private boolean validarDadosEvento(EventoDto evento) {
+		String nome = evento.nome;
+		String tipoEvento = evento.tipoEvento;
+		String descricao = evento.descricao;
+		int lotacao = evento.lotacao;
+		String endereco = evento.endereco;
+		UsuarioDto organizador = evento.organizador;
+		BigDecimal preco = evento.preco;
 		
 		if(nome == null || nome.length() < 2 || nome.length() > 50)
 			return false;
@@ -61,21 +118,13 @@ public class EventoService {
 		if(lotacao <= 0)
 			return false;
 		
-		if(!validarEndereco(endereco))
+		if(endereco == null || endereco.length() < 5 || endereco.length() > 80)
 			return false;
 		
 		if(organizador == null)
 			return false;
 		
-		return true;
-	}
-	
-	private boolean validarEndereco(Endereco endereco)
-	{
-		if(endereco == null)
-			return false;
-		
-		if(endereco.getEnderecoCompleto() == null || endereco.getCidade() == null || endereco.getBairro() == null)
+		if(preco.compareTo(BigDecimal.ZERO) <= 0)
 			return false;
 		
 		return true;

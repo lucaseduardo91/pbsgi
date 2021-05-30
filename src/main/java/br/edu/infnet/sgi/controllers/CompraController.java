@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.edu.infnet.sgi.models.Compra;
+import br.edu.infnet.sgi.dtos.CompraDto;
 import br.edu.infnet.sgi.services.CompraService;
 
 @RestController
@@ -15,7 +15,7 @@ public class CompraController {
 	private CompraService compraService;
 	
 	@PostMapping("/compra")
-	Compra cadastrarCompra(@RequestBody Compra novaCompra) {
+	CompraDto cadastrarCompra(@RequestBody CompraDto novaCompra) {
 	    return compraService.processarCompra(novaCompra);
 	  }	  
 }

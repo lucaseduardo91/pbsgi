@@ -1,5 +1,7 @@
 package br.edu.infnet.sgi.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,7 +11,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.edu.infnet.sgi.models.Evento;
+import br.edu.infnet.sgi.dtos.EventoDto;
 import br.edu.infnet.sgi.services.EventoService;
 
 @RestController
@@ -19,26 +21,38 @@ public class EventoController {
 	private EventoService eventoService;
 	
 	@PostMapping("/eventos")
-	  Evento cadastrarEvento(@RequestBody Evento novoEvento) {
+	  EventoDto cadastrarEvento(@RequestBody EventoDto novoEvento) {
 	    return eventoService.criarEvento(novoEvento);
 	  }	  
 	  
 	  @GetMapping("/eventos/{id}")
-	  Evento buscarEvento(@PathVariable long id) {
+	  EventoDto buscarEvento(@PathVariable long id) {
 	    
 	    return eventoService.buscarEvento(id);
 	  }
 	  
+	  @GetMapping("/eventos/{nome}")
+	  List<EventoDto> buscarPorNome(@PathVariable String nome) {
+	    
+	    return eventoService.buscarEventoPorNome(nome);
+	  }
+	  
+	  @GetMapping("/eventos/{tipo}")
+	  List<EventoDto> buscarPorTipo(@PathVariable String tipo) {
+	    
+	    return eventoService.buscarEventosPorTipo(tipo);
+	  }
+	  
 	  @GetMapping("/eventos/historico/{id}")
-	  Evento pesquisarHistorico(@PathVariable long id) {
+	  List<EventoDto> pesquisarHistorico(@PathVariable long id) {
 	    
 	    return eventoService.consultarHistorico(id);
 	  }
 
 	  @PutMapping("/eventos/{id}")
-	  Evento atualizarEvento(@RequestBody Evento eventoAtualizado, @PathVariable long id) {
+	  EventoDto atualizarEvento(@RequestBody EventoDto eventoAtualizado, @PathVariable long id) {
 	    
-	    return eventoService.atualizarEvento(eventoAtualizado);
+	    return eventoService.atualizarEvento(eventoAtualizado, id);
 	  }
 
 	  @DeleteMapping("/eventos/{id}")

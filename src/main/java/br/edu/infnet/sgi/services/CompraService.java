@@ -3,19 +3,25 @@ package br.edu.infnet.sgi.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.edu.infnet.sgi.dtos.CompraDto;
 import br.edu.infnet.sgi.models.Compra;
+import br.edu.infnet.sgi.repositories.CompraRepository;
 
 @Service
 public class CompraService {
-
-	@Autowired
-	private IngressoService ingressoService;
-	
-	public Compra processarCompra(Compra compra)
-	{
-		ingressoService.verificarDisponibilidade(null);
-		// chamar método do repositório para salvar compra
 		
-		return new Compra();
+	@Autowired
+	CompraRepository compraRepository;
+	
+	@Autowired
+	EntityConverterService conversor;
+	
+	public CompraDto processarCompra(CompraDto compraDto)
+	{		
+		Compra compra = conversor.converterDtoParaCompra(compraDto);
+		
+		compraRepository.save(compra);
+		
+		return compraDto;
 	}
 }

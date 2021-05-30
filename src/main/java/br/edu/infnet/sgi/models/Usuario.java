@@ -1,28 +1,47 @@
 package br.edu.infnet.sgi.models;
 
-public abstract class Usuario {
+import java.math.BigDecimal;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
+public class Usuario {
+
+	@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
 	private long id;
+	
+	@Column(name = "nome")
 	private String nome;
+	
+	@Column(name = "cpf_cnpj")
 	private String cpfCnpj;
+	
+	@Column(name = "email")
 	private String email;
-	private Endereco endereco;
 	
-	private Boolean validarCnpj()
-	{
-		// Adicionar validação
-		return true;
-	}
+	@Column(name = "endereco")
+	private String endereco;
 	
-	private Boolean validarCpf()
-	{
-		// Adicionar validação
-		return true;
-	}
+	@Column(name = "tipo_usuario")
+	private String tipoUsuario;
 	
-	private Boolean validarEmail()
+	@Column(name = "saldo_carteira")
+	private BigDecimal saldoCarteira;
+	
+	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)	
+	private Compra compra;
+	
+	private Boolean validarCpfCnpj(String valor)
 	{
-		// Adicionar validação
+		if(valor == null || valor.length() != 11 &&  valor.length() != 14)
+			return false;
+		
 		return true;
 	}
 	
@@ -48,7 +67,7 @@ public abstract class Usuario {
 
 	public void setCpfCnpj(String cpfCnpj) {
 		
-		if(validarCpf() || validarCnpj())
+		if(validarCpfCnpj(cpfCnpj))
 			this.cpfCnpj = cpfCnpj;
 		else {
 			// Decidir depois entre lançar exceção ou retornar boolean
@@ -59,20 +78,31 @@ public abstract class Usuario {
 		return email;
 	}
 
-	public void setEmail(String email) {
-		
-		if(validarEmail())
-			this.email = email;
-		else {
-			// Decidir depois entre lançar exceção ou retornar boolean
-		}
+	public void setEmail(String email) {		
+		this.email = email;
 	}
 
-	public Endereco getEndereco() {
+	public String getEndereco() {
 		return endereco;
 	}
 
-	public void setEndereco(Endereco endereco) {
+	public void setEndereco(String endereco) {
 		this.endereco = endereco;
+	}
+	
+	public String getTipoUsuario() {
+		return tipoUsuario;
+	}
+
+	public void setTipoUsuario(String tipoUsuario) {
+		this.tipoUsuario = tipoUsuario;
+	}
+	
+	public BigDecimal getSaldoCarteira() {
+		return saldoCarteira;
+	}
+
+	public void setSaldoCarteira(BigDecimal saldoCarteira) {
+		this.saldoCarteira = saldoCarteira;
 	}
 }
