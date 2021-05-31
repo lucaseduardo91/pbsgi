@@ -11,10 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import org.springframework.data.relational.core.mapping.Table;
-
 @Entity
-@Table("Compras")
 public class Compra {
 
 	@Id

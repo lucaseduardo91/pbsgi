@@ -13,10 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import org.springframework.data.relational.core.mapping.Table;
-
 @Entity
-@Table("Eventos")
 public class Evento {
 
 	@Id

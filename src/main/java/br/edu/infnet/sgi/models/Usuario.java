@@ -11,10 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-import org.springframework.data.relational.core.mapping.Table;
-
 @Entity
-@Table("Usuarios")
 public class Usuario {
 
 	@Id
@@ -48,10 +45,10 @@ public class Usuario {
 	
 	private Boolean validarCpfCnpj(String valor)
 	{
-		if(valor == null || valor.length() != 11 &&  valor.length() != 14)
-			return false;
+		if(valor != null && (valor.length() == 11 || valor.length() == 14))
+			return true;
 		
-		return true;
+		return false;
 	}
 	
 	public long getId() {
