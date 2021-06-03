@@ -31,13 +31,13 @@ public class EventoController {
 	    return eventoService.buscarEvento(id);
 	  }
 	  
-	  @GetMapping("/eventos/{nome}")
+	  @GetMapping("/eventos/nome/{nome}")
 	  List<EventoDto> buscarPorNome(@PathVariable String nome) {
 	    
 	    return eventoService.buscarEventoPorNome(nome);
 	  }
 	  
-	  @GetMapping("/eventos/{tipo}")
+	  @GetMapping("/eventos/tipo/{tipo}")
 	  List<EventoDto> buscarPorTipo(@PathVariable String tipo) {
 	    
 	    return eventoService.buscarEventosPorTipo(tipo);
