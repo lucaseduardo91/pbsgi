@@ -1,7 +1,6 @@
 package br.edu.infnet.sgi.models;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -34,7 +33,7 @@ public class Compra {
 	private Usuario cliente;
 	
 	@Column(name = "data_compra")
-	private Date data;
+	private String data;
 	
 	@Column(name = "total")
 	private BigDecimal total;
@@ -74,11 +73,11 @@ public class Compra {
 		this.cliente = cliente;
 	}
 
-	public Date getData() {
+	public String getData() {
 		return data;
 	}
 
-	public void setData(Date data) {
+	public void setData(String data) {
 		this.data = data;
 	}
 

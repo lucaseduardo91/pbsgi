@@ -46,6 +46,9 @@ public class Evento {
 	@Column(name = "endereco")
 	private String endereco;
 	
+	@Column(name = "data")
+	private String data;
+	
 	@Column(name = "descricao")
 	private String descricao;
 	
@@ -122,5 +125,13 @@ public class Evento {
 
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
+	}
+	
+	public String getData() {
+		return data;
+	}
+
+	public void setData(String data) {
+		this.data = data;
 	}
 }

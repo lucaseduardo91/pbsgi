@@ -1,6 +1,8 @@
 package br.edu.infnet.sgi.services;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -106,6 +108,7 @@ public class EventoService {
 		String endereco = evento.endereco;
 		UsuarioDto organizador = evento.organizador;
 		BigDecimal preco = evento.preco;
+		String data = evento.data;
 		
 		if(nome == null || nome.length() < 2 || nome.length() > 50)
 			return false;
@@ -121,6 +124,20 @@ public class EventoService {
 		
 		if(endereco == null || endereco.length() < 5 || endereco.length() > 80)
 			return false;
+		
+		if(data == null)
+			return false;
+		else
+		{
+			try {
+				SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+				dateFormat.setLenient(false);				
+				dateFormat.parse(data);
+				
+	        } catch (ParseException e) {
+	            return false;
+	        }
+		}
 		
 		if(organizador == null)
 			return false;

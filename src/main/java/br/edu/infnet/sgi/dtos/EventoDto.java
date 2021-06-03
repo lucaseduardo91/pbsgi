@@ -12,5 +12,6 @@ public class EventoDto {
 	public int ingressosVendidos;
 	public BigDecimal preco;
 	public String endereco;
+	public String data;
 	public String descricao;
 }

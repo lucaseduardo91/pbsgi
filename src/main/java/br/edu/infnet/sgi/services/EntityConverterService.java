@@ -53,6 +53,7 @@ public class EntityConverterService {
 		eventoDto.ingressosVendidos = evento.getIngressosVendidos();
 		eventoDto.lotacao = evento.getLotacao();
 		eventoDto.preco = evento.getPreco();
+		eventoDto.data = evento.getData();
 		eventoDto.organizador = converterUsuarioParaDto(evento.getOrganizador());
 		
 		return eventoDto;
@@ -69,6 +70,7 @@ public class EntityConverterService {
 		evento.setIngressosVendidos(eventoDto.ingressosVendidos);
 		evento.setLotacao(eventoDto.lotacao);
 		evento.setPreco(eventoDto.preco);
+		evento.setData(eventoDto.data);
 		evento.setOrganizador(converterDtoParaUsuario(eventoDto.organizador));
 		
 		return evento;
