@@ -24,8 +24,9 @@ public class EventoService {
 	public EventoDto criarEvento(EventoDto novoEvento)
 	{
 		if(validarDadosEvento(novoEvento))
-		{
+		{			
 			Evento evento = conversor.converterDtoParaEvento(novoEvento);
+			evento.getOrganizador().setId(novoEvento.organizador.id);
 			eventoRepository.save(evento);
 			return novoEvento;
 		}				
@@ -112,7 +113,7 @@ public class EventoService {
 		if(tipoEvento == null || tipoEvento.length() < 2 || tipoEvento.length() > 20)
 			return false;
 		
-		if(descricao == null || descricao.length() < 2 || descricao.length() > 50)
+		if(descricao == null || descricao.length() < 2 || descricao.length() > 300)
 			return false;
 		
 		if(lotacao <= 0)

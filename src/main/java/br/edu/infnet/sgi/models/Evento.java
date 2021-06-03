@@ -6,14 +6,17 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 @Entity
+@Table(name="eventos")
 public class Evento {
 
 	@Id
@@ -27,9 +30,8 @@ public class Evento {
 	@Column(name = "tipo_evento")
 	private String tipoEvento;
 	
-	@ManyToOne(optional = false)
-    @JoinColumn(name = "usuario_id", nullable = false,
-        referencedColumnName = "id")	
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id")	
 	private Usuario organizador;
 	
 	@Column(name = "Lotacao")

@@ -19,6 +19,8 @@ public class CompraService {
 	public CompraDto processarCompra(CompraDto compraDto)
 	{		
 		Compra compra = conversor.converterDtoParaCompra(compraDto);
+		compra.getEvento().setId(compraDto.evento.id);
+		compra.getCliente().setId(compraDto.cliente.id);
 		
 		compraRepository.save(compra);
 		

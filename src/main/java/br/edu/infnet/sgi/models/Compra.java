@@ -5,13 +5,16 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
+@Table(name="compras")
 public class Compra {
 
 	@Id
@@ -19,17 +22,15 @@ public class Compra {
 	@Column(name = "id")
 	private long id;
 	
-	@ManyToOne(optional = false)
-    @JoinColumn(name = "evento_id", nullable = false,
-        referencedColumnName = "id")
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "evento_id")
 	private Evento evento;
 	
 	@Column(name = "qtd_ingressos")
 	private int qtdIngressos;
 	
-	@ManyToOne(optional = false)
-    @JoinColumn(name = "usuario_id", nullable = false,
-        referencedColumnName = "id")
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id")
 	private Usuario cliente;
 	
 	@Column(name = "data_compra")

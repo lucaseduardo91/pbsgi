@@ -10,8 +10,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 @Entity
+@Table(name="usuarios")
 public class Usuario {
 
 	@Id
@@ -37,10 +39,12 @@ public class Usuario {
 	@Column(name = "saldo_carteira")
 	private BigDecimal saldoCarteira;
 	
-	@OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)	
+	@OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL,
+	        orphanRemoval = true)	
 	private Set<Compra> compra;
 	
-	@OneToMany(mappedBy = "organizador", cascade = CascadeType.ALL)	
+	@OneToMany(mappedBy = "organizador", cascade = CascadeType.ALL,
+	        orphanRemoval = true)	
 	private Set<Evento> evento;
 	
 	private Boolean validarCpfCnpj(String valor)
