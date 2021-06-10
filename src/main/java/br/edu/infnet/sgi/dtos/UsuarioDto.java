@@ -10,5 +10,6 @@ public class UsuarioDto {
 	public String email;
 	public String endereco;
 	public String tipoUsuario;
-	public BigDecimal saldoCarteira;	
+	public BigDecimal saldoCarteira;
+	public String password;
 }

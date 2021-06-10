@@ -1,6 +1,7 @@
 package br.edu.infnet.sgi.models;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -12,10 +13,15 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 @Entity
 @Table(name="usuarios")
-public class Usuario {
+public class Usuario implements UserDetails {
 
+	private static final long serialVersionUID = 1L;
+	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
@@ -39,6 +45,9 @@ public class Usuario {
 	@Column(name = "saldo_carteira")
 	private BigDecimal saldoCarteira;
 	
+	@Column(name = "password")
+	private String password;	
+
 	@OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL,
 	        orphanRemoval = true)	
 	private Set<Compra> compra;
@@ -114,5 +123,44 @@ public class Usuario {
 
 	public void setSaldoCarteira(BigDecimal saldoCarteira) {
 		this.saldoCarteira = saldoCarteira;
+	}
+	
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return null;
+	}
+
+	@Override
+	public String getPassword() {
+		return this.password;
+	}
+
+	@Override
+	public String getUsername() {
+		return this.email;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return true;
 	}
 }

@@ -1,6 +1,7 @@
 package br.edu.infnet.sgi.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import br.edu.infnet.sgi.dtos.UsuarioDto;
@@ -16,9 +17,13 @@ public class UsuarioService {
 	@Autowired
 	EntityConverterService conversor;
 	
+	@Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+	
 	public UsuarioDto criarUsuario(UsuarioDto novoUsuario)
 	{
 		Usuario usuario = conversor.converterDtoParaUsuario(novoUsuario);
+		usuario.setPassword(passwordEncoder.encode(novoUsuario.password));
 		
 		usuarioRepository.save(usuario);
 		
