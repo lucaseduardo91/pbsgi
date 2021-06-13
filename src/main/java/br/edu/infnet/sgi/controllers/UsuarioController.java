@@ -45,20 +45,26 @@ public class UsuarioController {
 	  }	  
 	
 	@PostMapping("/usuario")
-	public UsuarioDto cadastrarUsuario(@RequestBody UsuarioDto novoUsuario) {
-	    return usuarioService.criarUsuario(novoUsuario);
+	public ResponseEntity<UsuarioDto> cadastrarUsuario(@RequestBody UsuarioDto novoUsuario) {
+	    return ResponseEntity.ok(usuarioService.criarUsuario(novoUsuario));
 	  }	  
 	  
 	@GetMapping("/usuario/{id}")
-	public UsuarioDto buscarUsuario(@PathVariable long id) {
+	public ResponseEntity<UsuarioDto> buscarUsuario(@PathVariable long id) {
 	    
-		return usuarioService.buscarUsuario(id);
+		return ResponseEntity.ok(usuarioService.buscarUsuario(id));
+	}
+	
+	@GetMapping("/usuario/email/{email}")
+	public ResponseEntity<UsuarioDto> buscarUsuarioPorEmail(@PathVariable String email) {
+	    
+		return ResponseEntity.ok(usuarioService.buscarUsuarioPorEmail(email));
 	}	  
 
 	@PutMapping("/usuario/{id}")
-	public UsuarioDto atualizarUsuario(@RequestBody UsuarioDto usuarioAtualizado, @PathVariable long id) {
+	public ResponseEntity<UsuarioDto> atualizarUsuario(@RequestBody UsuarioDto usuarioAtualizado, @PathVariable long id) {
 	    
-		return usuarioService.atualizarUsuario(usuarioAtualizado, id);
+		return ResponseEntity.ok(usuarioService.atualizarUsuario(usuarioAtualizado, id));
 	}
 
 	@DeleteMapping("/usuario/{id}")

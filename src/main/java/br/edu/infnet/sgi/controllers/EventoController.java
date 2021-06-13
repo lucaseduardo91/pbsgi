@@ -3,6 +3,7 @@ package br.edu.infnet.sgi.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,42 +22,42 @@ public class EventoController {
 	private EventoService eventoService;
 	
 	@PostMapping("/eventos")
-	  EventoDto cadastrarEvento(@RequestBody EventoDto novoEvento) {
-	    return eventoService.criarEvento(novoEvento);
-	  }	  
+	public ResponseEntity<EventoDto> cadastrarEvento(@RequestBody EventoDto novoEvento) {
+	    return ResponseEntity.ok(eventoService.criarEvento(novoEvento));
+	}	  
 	  
-	  @GetMapping("/eventos/{id}")
-	  EventoDto buscarEvento(@PathVariable long id) {
+	@GetMapping("/eventos/{id}")
+	public ResponseEntity<EventoDto> buscarEvento(@PathVariable long id) {
 	    
-	    return eventoService.buscarEvento(id);
-	  }
+		return ResponseEntity.ok(eventoService.buscarEvento(id));
+	}
 	  
-	  @GetMapping("/eventos/nome/{nome}")
-	  List<EventoDto> buscarPorNome(@PathVariable String nome) {
+	@GetMapping("/eventos/nome/{nome}")
+	public ResponseEntity<List<EventoDto>> buscarPorNome(@PathVariable String nome) {
 	    
-	    return eventoService.buscarEventoPorNome(nome);
-	  }
+		return ResponseEntity.ok(eventoService.buscarEventoPorNome(nome));
+	}
 	  
-	  @GetMapping("/eventos/tipo/{tipo}")
-	  List<EventoDto> buscarPorTipo(@PathVariable String tipo) {
+	@GetMapping("/eventos/tipo/{tipo}")
+	public ResponseEntity<List<EventoDto>> buscarPorTipo(@PathVariable String tipo) {
 	    
-	    return eventoService.buscarEventosPorTipo(tipo);
-	  }
+		return ResponseEntity.ok(eventoService.buscarEventosPorTipo(tipo));
+	}
 	  
-	  @GetMapping("/eventos/historico/{id}")
-	  List<EventoDto> pesquisarHistorico(@PathVariable long id) {
+	@GetMapping("/eventos/historico/{id}")
+	public ResponseEntity<List<EventoDto>> pesquisarHistorico(@PathVariable long id) {
 	    
-	    return eventoService.consultarHistorico(id);
-	  }
+		return ResponseEntity.ok(eventoService.consultarHistoricoEventos(id));
+	}
 
-	  @PutMapping("/eventos/{id}")
-	  EventoDto atualizarEvento(@RequestBody EventoDto eventoAtualizado, @PathVariable long id) {
+	@PutMapping("/eventos/{id}")
+	public ResponseEntity<EventoDto> atualizarEvento(@RequestBody EventoDto eventoAtualizado, @PathVariable long id) {
 	    
-	    return eventoService.atualizarEvento(eventoAtualizado, id);
-	  }
+		return ResponseEntity.ok(eventoService.atualizarEvento(eventoAtualizado, id));
+	}
 
-	  @DeleteMapping("/eventos/{id}")
-	  void deletarEvento(@PathVariable long id) {
-	    eventoService.deletarEvento(id);
-	  }
+	@DeleteMapping("/eventos/{id}")
+	public void deletarEvento(@PathVariable long id) {
+		eventoService.deletarEvento(id);
+	}
 }

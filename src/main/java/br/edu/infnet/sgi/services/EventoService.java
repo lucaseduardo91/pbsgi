@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,20 +39,30 @@ public class EventoService {
 	
 	public EventoDto buscarEvento(long id)
 	{
-		Evento evento = eventoRepository.findById(id).get();
+		Optional<Evento> evento = eventoRepository.findById(id);
 		
-		return conversor.converterEventoParaDto(evento);
+		if(evento.isPresent())
+		{
+			return conversor.converterEventoParaDto(evento.get());
+		}
+		
+		return null;
 	}
 	
 	public List<EventoDto> buscarEventoPorNome(String nomeEvento)
 	{
 		List<Evento> eventos = eventoRepository.findByNome(nomeEvento);
-		List<EventoDto> eventosDto = new ArrayList<EventoDto>();
+		List<EventoDto> eventosDto = null;
 		
-		for(Evento evento : eventos)
+		if(eventos != null && eventos.size() > 0)
 		{
-			eventosDto.add(conversor.converterEventoParaDto(evento));
-		}
+			eventosDto = new ArrayList<EventoDto>();
+			
+			for(Evento evento : eventos)
+			{
+				eventosDto.add(conversor.converterEventoParaDto(evento));
+			}
+		}		
 		
 		return eventosDto;
 	}
@@ -59,21 +70,36 @@ public class EventoService {
 	public List<EventoDto> buscarEventosPorTipo(String tipoEvento)
 	{
 		List<Evento> eventos = eventoRepository.findByTipoEvento(tipoEvento);
-		List<EventoDto> eventosDto = new ArrayList<EventoDto>();
+		List<EventoDto> eventosDto = null;
 		
-		for(Evento evento : eventos)
+		if(eventos != null && eventos.size() > 0)
 		{
-			eventosDto.add(conversor.converterEventoParaDto(evento));
-		}
+			eventosDto = new ArrayList<EventoDto>();
+			for(Evento evento : eventos)
+			{
+				eventosDto.add(conversor.converterEventoParaDto(evento));
+			}
+		}		
 		
 		return eventosDto;
 	}
 	
-	public List<EventoDto> consultarHistorico(long id)
+	public List<EventoDto> consultarHistoricoEventos(long id)
 	{
-		// Chamar método do repositório para buscar eventos passados com participação do usuário
+		List<Evento> eventos = eventoRepository.obterHistoricoEventos(id);
+		List<EventoDto> eventosDto = null;
 		
-		return new ArrayList<EventoDto>();
+		if(eventos != null && eventos.size() > 0)
+		{
+			eventosDto = new ArrayList<EventoDto>();
+			
+			for(Evento evento : eventos)
+			{
+				eventosDto.add(conversor.converterEventoParaDto(evento));
+			}
+		}
+		
+		return eventosDto;
 	}
 	
 	public EventoDto atualizarEvento(EventoDto eventoAtualizado, long id)

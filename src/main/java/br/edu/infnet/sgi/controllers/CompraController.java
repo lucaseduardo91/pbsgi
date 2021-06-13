@@ -1,6 +1,11 @@
 package br.edu.infnet.sgi.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,7 +20,13 @@ public class CompraController {
 	private CompraService compraService;
 	
 	@PostMapping("/compra")
-	CompraDto cadastrarCompra(@RequestBody CompraDto novaCompra) {
-	    return compraService.processarCompra(novaCompra);
-	  }	  
+	public ResponseEntity<CompraDto> cadastrarCompra(@RequestBody CompraDto novaCompra) {
+	    return ResponseEntity.ok(compraService.processarCompra(novaCompra));
+	}
+	
+	@GetMapping("/compra/historico/{id}")
+	public ResponseEntity<List<CompraDto>> pesquisarHistorico(@PathVariable long id)
+	{
+		return ResponseEntity.ok(compraService.obterHistoricoCompras(id));
+	}
 }

@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import br.edu.infnet.sgi.models.Compra;
 
 @Repository
-public interface CompraRepository extends JpaRepository<Compra, Long> {
+public interface CompraRepository extends JpaRepository<Compra, Long>, CompraCustomRepository {
 
 }

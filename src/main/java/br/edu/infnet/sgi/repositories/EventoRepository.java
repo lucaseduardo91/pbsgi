@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import br.edu.infnet.sgi.models.Evento;
 
 @Repository
-public interface EventoRepository extends JpaRepository<Evento, Long> {
+public interface EventoRepository extends JpaRepository<Evento, Long>, EventoCustomRepository {
 	List<Evento> findByTipoEvento(String tipoEvento);
 	List<Evento> findByNome(String nome);
 }

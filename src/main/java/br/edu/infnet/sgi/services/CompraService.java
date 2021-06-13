@@ -1,5 +1,8 @@
 package br.edu.infnet.sgi.services;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,5 +40,23 @@ public class CompraService {
 		eventoRepository.save(evento);
 		
 		return compraDto;
+	}
+	
+	public List<CompraDto> obterHistoricoCompras(long id)
+	{
+		List<Compra> compras = compraRepository.obterHistoricoCompras(id);
+		ArrayList<CompraDto> comprasDto = null;
+		
+		if(compras != null && compras.size() > 0)
+		{
+			comprasDto = new ArrayList<CompraDto>();
+			
+			for(Compra compra : compras)
+			{
+				comprasDto.add(conversor.converterCompraParaDto(compra));
+			}
+		}		
+		
+		return comprasDto;
 	}
 }

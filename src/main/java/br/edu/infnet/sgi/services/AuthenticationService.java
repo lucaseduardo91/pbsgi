@@ -1,6 +1,6 @@
 package br.edu.infnet.sgi.services;
 
-import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,11 +19,11 @@ public class AuthenticationService implements UserDetailsService{
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		List<Usuario> usuarios = repository.findByEmail(username);
 		
-		if(usuarios.size() > 0) {
-			return usuarios.get(0);
-		}
+		Optional<Usuario> usuario = repository.findByEmail(username);
+		
+		if(usuario.isPresent())
+			return usuario.get();
 		
 		throw new UsernameNotFoundException("User not found");
 	}	

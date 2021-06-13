@@ -1,5 +1,7 @@
 package br.edu.infnet.sgi.services;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -32,10 +34,29 @@ public class UsuarioService {
 	
 	public UsuarioDto buscarUsuario(long id)
 	{
-		Usuario usuario = usuarioRepository.findById(id).get();		
-		UsuarioDto usuarioDto = conversor.converterUsuarioParaDto(usuario);
+		Optional<Usuario> usuario = usuarioRepository.findById(id);	
 		
-		return usuarioDto;
+		if(usuario.isPresent())
+		{
+			UsuarioDto usuarioDto = conversor.converterUsuarioParaDto(usuario.get());			
+			return usuarioDto;
+		}
+		
+		return null;
+		
+	}
+	
+	public UsuarioDto buscarUsuarioPorEmail(String email)
+	{
+		Optional<Usuario> usuario = usuarioRepository.findByEmail(email);
+		
+		if(usuario.isPresent())
+		{
+			UsuarioDto usuarioDto = conversor.converterUsuarioParaDto(usuario.get());
+			return usuarioDto;
+		}
+		
+		return null;
 	}
 	
 	public UsuarioDto atualizarUsuario(UsuarioDto usuarioAtualizado, long id)
