@@ -6,6 +6,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +24,7 @@ import br.edu.infnet.sgi.services.UsuarioService;
 
 @RestController
 @RequestMapping("/pbsgi")
+@CrossOrigin(origins = "http://localhost:4000")
 public class UsuarioController {
 
 	@Autowired
@@ -35,7 +37,7 @@ public class UsuarioController {
 	private TokenService tokenService;
 	
 	@PostMapping("/login")
-	public ResponseEntity<TokenDto> login(@RequestBody @Validated LoginDto loginDto) {
+	public TokenDto login(@RequestBody @Validated LoginDto loginDto) {
 		UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(loginDto.email, loginDto.password);
 		
 		Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
@@ -43,7 +45,7 @@ public class UsuarioController {
 		String token = tokenService.generateToken(authentication);
 		
 		TokenDto tokenDto = new TokenDto("Bearer", token);
-		return ResponseEntity.ok(tokenDto);
+		return tokenDto;
 	  }	  
 	
 	@PostMapping("/usuario")
