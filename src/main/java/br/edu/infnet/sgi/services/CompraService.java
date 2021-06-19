@@ -2,6 +2,7 @@ package br.edu.infnet.sgi.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -58,5 +59,21 @@ public class CompraService {
 		}		
 		
 		return comprasDto;
+	}
+	
+	public void removerCompra(long id)
+	{
+		Optional<Compra> compra = compraRepository.findById(id);
+		
+		if(compra.isPresent())
+		{
+			Evento evento = compra.get().getEvento();
+			int qtdVendidos = evento.getIngressosVendidos();
+			
+			evento.setIngressosVendidos(qtdVendidos - compra.get().getQtdIngressos());
+			
+			compraRepository.deleteById(id);
+			eventoRepository.save(evento);
+		}
 	}
 }
