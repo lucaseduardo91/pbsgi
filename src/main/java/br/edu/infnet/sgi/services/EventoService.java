@@ -12,8 +12,12 @@ import org.springframework.stereotype.Service;
 
 import br.edu.infnet.sgi.dtos.EventoDto;
 import br.edu.infnet.sgi.dtos.UsuarioDto;
+import br.edu.infnet.sgi.exceptions.EntradaInvalidaException;
+import br.edu.infnet.sgi.exceptions.NaoEncontradoException;
 import br.edu.infnet.sgi.models.Evento;
+import br.edu.infnet.sgi.models.Usuario;
 import br.edu.infnet.sgi.repositories.EventoRepository;
+import br.edu.infnet.sgi.repositories.UsuarioRepository;
 
 @Service
 public class EventoService {
@@ -22,19 +26,36 @@ public class EventoService {
 	EventoRepository eventoRepository;
 	
 	@Autowired
+	UsuarioRepository usuarioRepository;
+	
+	@Autowired
 	EntityConverterService conversor;
 	
 	public EventoDto criarEvento(EventoDto novoEvento)
 	{
-		if(validarDadosEvento(novoEvento))
-		{			
-			Evento evento = conversor.converterDtoParaEvento(novoEvento);
-			evento.getOrganizador().setId(novoEvento.organizador.id);
-			eventoRepository.save(evento);
-			return novoEvento;
-		}				
+		String erro = validarDadosEvento(novoEvento);
 		
-		return null;
+		if(erro != null)
+		{
+			throw new EntradaInvalidaException(erro);
+		}
+		else
+		{
+			List<EventoDto> existente = buscarEventoPorNome(novoEvento.nome);
+			if(existente != null)
+			{
+				for(EventoDto ev : existente)
+				{
+					if(ev.data.equals(novoEvento.data) && ev.endereco.equals(novoEvento.endereco))
+						throw new EntradaInvalidaException("Um evento já foi cadastrado com esse nome, data e local");
+				}
+			}			
+		}
+		
+		Evento evento = conversor.converterDtoParaEvento(novoEvento);
+		evento.getOrganizador().setId(novoEvento.organizador.id);
+		eventoRepository.save(evento);
+		return novoEvento;
 	}
 	
 	public EventoDto buscarEvento(long id)
@@ -104,7 +125,21 @@ public class EventoService {
 	
 	public EventoDto atualizarEvento(EventoDto eventoAtualizado, long id)
 	{		
-		Evento evento = eventoRepository.findById(id).get();
+		String erro = validarDadosEvento(eventoAtualizado);
+		Evento evento = null;
+		
+		if(erro != null)
+		{			
+			throw new EntradaInvalidaException(erro);
+		}
+		else
+		{
+			Optional<Evento> existente = eventoRepository.findById(id);
+			if(!existente.isPresent())
+				throw new NaoEncontradoException("Não foi possível encontrar o evento com os parâmetros informados");
+			else
+				evento = existente.get();
+		}
 		
 		evento.setId(id);
 		evento.setNome(eventoAtualizado.nome);
@@ -114,7 +149,9 @@ public class EventoService {
 		evento.setIngressosVendidos(eventoAtualizado.ingressosVendidos);
 		evento.setLotacao(eventoAtualizado.lotacao);
 		evento.setPreco(eventoAtualizado.preco);
-		evento.setOrganizador(conversor.converterDtoParaUsuario(eventoAtualizado.organizador));
+		
+		Optional<Usuario> organizador = usuarioRepository.findById(eventoAtualizado.organizador.id);
+		evento.setOrganizador(organizador.get());
 		
 		eventoRepository.save(evento);
 		
@@ -126,33 +163,37 @@ public class EventoService {
 		eventoRepository.deleteById(id);
 	}
 	
-	private boolean validarDadosEvento(EventoDto evento) {
+	private String validarDadosEvento(EventoDto evento) {
 		String nome = evento.nome;
 		String tipoEvento = evento.tipoEvento;
 		String descricao = evento.descricao;
 		int lotacao = evento.lotacao;
+		int ingressosVendidos = evento.ingressosVendidos;
 		String endereco = evento.endereco;
 		UsuarioDto organizador = evento.organizador;
 		BigDecimal preco = evento.preco;
 		String data = evento.data;
 		
-		if(nome == null || nome.length() < 2 || nome.length() > 50)
-			return false;
+		if(nome == null || nome.length() < 2 || nome.length() > 80)
+			return "O nome do evento não pode ser nulo e deve possuir de 2 a 80 caracteres";
 		
-		if(tipoEvento == null || tipoEvento.length() < 2 || tipoEvento.length() > 20)
-			return false;
+		if(tipoEvento == null || (!tipoEvento.equals("filme") && !tipoEvento.equals("show") && !tipoEvento.equals("peca")))
+			return "O tipo do evento não pode ser nulo e deve ser filme, show ou peca";
 		
 		if(descricao == null || descricao.length() < 2 || descricao.length() > 300)
-			return false;
+			return "A descrição do evento não pode ser nula e deve possuir de 2 a 300 caracteres";
 		
 		if(lotacao <= 0)
-			return false;
+			return "Lotação do evento não pode ser menor ou igual a zero";
 		
-		if(endereco == null || endereco.length() < 5 || endereco.length() > 80)
-			return false;
+		if(ingressosVendidos < 0)
+			return "Quantidade de ingressos vendidos para o evento não pode ser negativa";
+		
+		if(endereco == null || endereco.length() < 5 || endereco.length() > 100)
+			return "O endereço do evento não pode ser nulo e deve possuir de 5 a 100 caracteres";
 		
 		if(data == null)
-			return false;
+			return "A data do evento não pode ser nula";
 		else
 		{
 			try {
@@ -161,16 +202,16 @@ public class EventoService {
 				dateFormat.parse(data);
 				
 	        } catch (ParseException e) {
-	            return false;
+	            return "A data do evento deve estar no formato dd/MM/yyyy HH:mm";
 	        }
 		}
 		
 		if(organizador == null)
-			return false;
+			return "O organizador do evento não pode ser nulo";
 		
-		if(preco.compareTo(BigDecimal.ZERO) <= 0)
-			return false;
+		if(preco.compareTo(BigDecimal.ZERO) < 0)
+			return "O preço do ingresso não pode ser negativo";
 		
-		return true;
+		return null;
 	}
 }

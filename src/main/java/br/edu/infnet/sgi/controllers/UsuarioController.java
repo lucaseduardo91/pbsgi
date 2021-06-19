@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.edu.infnet.sgi.dtos.LoginDto;
 import br.edu.infnet.sgi.dtos.TokenDto;
 import br.edu.infnet.sgi.dtos.UsuarioDto;
+import br.edu.infnet.sgi.exceptions.NaoEncontradoException;
 import br.edu.infnet.sgi.services.TokenService;
 import br.edu.infnet.sgi.services.UsuarioService;
 
@@ -55,14 +56,22 @@ public class UsuarioController {
 	  
 	@GetMapping("/usuario/{id}")
 	public ResponseEntity<UsuarioDto> buscarUsuario(@PathVariable long id) {
+	    UsuarioDto usuario = usuarioService.buscarUsuario(id);
 	    
-		return ResponseEntity.ok(usuarioService.buscarUsuario(id));
+	    if(usuario == null)
+	    	throw new NaoEncontradoException("Não foi possível encontrar o usuário com os parâmetros informados");
+	    
+		return ResponseEntity.ok(usuario);
 	}
 	
 	@GetMapping("/usuario/email/{email}")
 	public ResponseEntity<UsuarioDto> buscarUsuarioPorEmail(@PathVariable String email) {
+		UsuarioDto usuario = usuarioService.buscarUsuarioPorEmail(email);
 	    
-		return ResponseEntity.ok(usuarioService.buscarUsuarioPorEmail(email));
+	    if(usuario == null)
+	    	throw new NaoEncontradoException("Não foi possível encontrar o usuário com os parâmetros informados");
+	    
+		return ResponseEntity.ok(usuario);
 	}	  
 
 	@PutMapping("/usuario/{id}")

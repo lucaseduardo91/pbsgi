@@ -54,15 +54,8 @@ public class Usuario implements UserDetails {
 	
 	@OneToMany(mappedBy = "organizador", cascade = CascadeType.ALL,
 	        orphanRemoval = true)	
-	private Set<Evento> evento;
+	private Set<Evento> evento;	
 	
-	private Boolean validarCpfCnpj(String valor)
-	{
-		if(valor != null && (valor.length() == 11 || valor.length() == 14))
-			return true;
-		
-		return false;
-	}
 	
 	public long getId() {
 		return id;
@@ -84,13 +77,8 @@ public class Usuario implements UserDetails {
 		return cpfCnpj;
 	}
 
-	public void setCpfCnpj(String cpfCnpj) {
-		
-		if(validarCpfCnpj(cpfCnpj))
-			this.cpfCnpj = cpfCnpj;
-		else {
-			// Decidir depois entre lançar exceção ou retornar boolean
-		}
+	public void setCpfCnpj(String cpfCnpj) {				
+		this.cpfCnpj = cpfCnpj;		
 	}
 
 	public String getEmail() {
